@@ -19,8 +19,13 @@
 			//VERIFICA SE OS PARAMETROS ESTÃO CORRETOS
 			$this->_verifyParameters($option,$name);
 			
+			//GERA SCAFFOLD PARA TODO DB
 			if(strtolower($option)=="db"){
 				$this->_generateForDatabase();
+			}
+			//GERA SCAFFOLD PATA UMA TABELA
+			else if(strtolower($option)=="table"){
+				$this->_generateForTable($name);
 			}
 		}
 		function _generateForDatabase(){
@@ -35,6 +40,13 @@
 				}			
 			}
 		}
+		function _generateForTable($table = NULL){
+			if($table==NULL || trim($table)=="")
+				die("Table name not set");
+				
+			$scaffolderGenerator = new ScaffoldGenerator($table);					
+			$scaffolderGenerator->generate();
+		}		
 		function _verifyParameters($option,$name){
 			if((strtolower($option)=="table") && ($name!=NULL && trim($name)!="")){
 				return true;
@@ -69,14 +81,51 @@ class ScaffoldGenerator{
 	}
 
 	function _generateView(){
-		//TODO
-		foreach($this->tableInfo as $info)
-		{
-			echo $info["Field"] . "<br>" ;
-		}
 	}
-	function _generateController(){
-		//TODO
+	function _generateController(){	
+		$c = "<?php\n";
+		$c .= "class ".ucwords($this->tableInfo)."Controller extends Controller{\n";
+		
+			$c .= "\tfunction __construct(){\n";
+				$c .= "\t\tparent::Controller();\n";
+				$c .= "\t\t".'$this->load->model("'.$this->tableInfo.'model","",TRUE)'."\n";
+			$c .= "\t}\n";
+			
+			$c .= "\tfunction index(){\n";
+				$c .= "\t\t".'$this->load->view("'.$this->tableInfo."view.php\");\n";
+			$c .= "\t}\n";
+			
+			$c .= "\tfunction create(){\n";
+				$c .= "\t\t".'$this->load->view("create'.$this->tableInfo."view.php\");\n";
+			$c .= "\t}\n";
+			
+			$c .= "\tfunction save(){\n";
+				$c .= "\t\t".'$this->'.$this->tableInfo."model->save();\n";
+			$c .= "\t}\n";
+			
+			$c .= "\tfunction edit(".'$id'."){\n";
+				$c .= "\t\t".'$this->load->view("edit'.$this->tableInfo.'view.php");'."\n";
+			$c .= "\t}\n";
+			
+			$c .= "\tfunction update(".'$id'."){\n";
+				$c .= "\t\t".'$this->'.$this->tableInfo.'model->update($id);'."\n";
+			$c .= "\t}\n";
+			
+			$c .= "\tfunction delete(".'$id'."){\n";
+				$c .= "\t\t".'$this->'.$this->tableInfo.'model->delete($id);'."\n";
+			$c .= "\t}\n";
+			
+			
+			
+		
+		
+		$c .= "}\n";
+		$c .= "?>";	
+		
+		$file = fopen("/".ucwords($this->tableInfo)."Controller.php", "w"); // abre o arquivo
+		fwrite($file, $c); // grava no arquivo. Se o arquivo não existir ele será criado
+		fclose($file); // fecha o arquivo
+
 	}
 	function _generateModel(){
 		//TODO
