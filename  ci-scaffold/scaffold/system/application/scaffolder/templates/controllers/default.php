@@ -8,7 +8,7 @@ class $controller_name extends Controller{
 	*/
 	function __construct(){
 		parent::Controller();
-		\$this->load->model('$model');
+		\$this->load->model('$model', '', true);
 	}
 
 	/*
@@ -33,25 +33,20 @@ class $controller_name extends Controller{
 		Delete $model_name
 	*/
 	function delete(\$id){
-		\$response = \$this->$model->delete(\$id);
+		\$response = \$this->${model}->delete(\$id);
 		\$this->load->view('$controller/delete', array('response' => \$response));
 	}
 	
 	/*
 		List objects of $model_name
 	*/
-	function list(){
+	function index(){
 		\$data = array(
-			\"objects\" => \$this->$model->list(),
+			\"objects\" => \$this->${model}->all(),
+			\"title\" => \"$controller_name\",
+			\"heading\" => \"List\",
 		);
 		\$this->load->view('$controller/list', \$data);
-	}
-	
-	/*
-		Default Code Igniter action
-	*/
-	function index(){
-		\$this->list();
 	}
 	
 }
