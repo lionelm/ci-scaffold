@@ -1,5 +1,5 @@
 <?php
-	define("APPPATH", "f:\\xampp\\htdocs\\system\\application\\");
+	define("APPPATH", "c:\\wamp\\www\\scafoda-se\\system\\application\\");
 	require("file_handler.php");
 	$table = "canal";
 	$controller = $table . "s";
@@ -24,6 +24,7 @@
 	require("templates/views/save.php");
 	require("templates/views/edit.php");
 	require("templates/views/delete.php");
+	require("templates/views/form.php");
 	echo "====================================================================================<br/>";
 	echo "Gererating $controller.php... ";
 	create_file($controller_path, $controller_template);
@@ -38,6 +39,9 @@
 	create_folder($view_path);
 	echo "Generating save.php... ";
 	create_file($view_path . '\\save.php', $save_template);
+	echo "DONE! <br/>";
+	echo "Generating form.php... ";
+	create_file($view_path . '\\form.php',$form);
 	echo "DONE! <br/>";
 	echo "Generating edit.php... ";
 	create_file($view_path . '\\edit.php', $edit_template);
