@@ -2,7 +2,7 @@
 
 $fields = '';
 foreach($table_fields as $field)
-	$fields .= "\tvar $field;\n";
+	$fields .= "\tvar \$$field;\n";
 	
 $fill = '';
 foreach($table_fields as $field)
@@ -59,7 +59,7 @@ $fill
 		return \$this->db->delete('$table',\$id);
 	}
 	
-	function list(){
+	function all(){
 		return \$this->db->get('$table')->result();
 	}
 	

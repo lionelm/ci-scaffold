@@ -9,3 +9,8 @@ function create_file($filename, $content){
 function delete_file($filename){
 	unlink($filename);
 }
+
+function create_folder($path){
+	if(!file_exists($path))
+		mkdir($path);
+}
