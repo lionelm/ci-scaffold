@@ -41,7 +41,17 @@ class ScaffolderTest {
         $this->assertNotNull($result, "Conteudo controller nao vazio");
         $this->assert($this->parseText($result), $this->parseText($expected), "Controller correto");
     }
+    public function testModel(){
+        $result = $this->scaffolder->createModel("cidade", array( "nome", "alias", "estado_id" ));
+        $expected = $this->getTemplate("model");
+        $this->assertNotNull($result, "Conteudo model nao vazio");
+        $this->assert($this->parseText($result), $this->parseText($expected), "Model correto");
+        echo $this->parseText($result);
+        echo "<br/>";
+        echo $this->parseText($expected);
+    }
 }
 
 $test = new ScaffolderTest();
 $test->testController();
+$test->testModel();

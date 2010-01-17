@@ -110,10 +110,12 @@ class Scaffolder {
     /**
     * Cria um model baseado no template setado
     **/
-    private function createModel($model){
+    public function createModel($model, $table_fields){
         $this->log($model);
         $vars = array(
+            "table" => $model,
             "model_name" => "Model" . ucwords($model),
+            "table_fields" => $table_fields,
         );
         $template = $this->getTemplate("model", $vars);
         $this->createFile($model_path, $template);
@@ -122,31 +124,31 @@ class Scaffolder {
     /**
     * Cria a view de criacao baseado no template setado
     **/
-    private function createSaveView($controller, $model){
+    public function createSaveView($controller, $model){
     
     }
     /**
     * Cria a view de edicao baseado no template setado
     **/
-    private function createEditView($controller, $model){
+    public function createEditView($controller, $model){
     
     }
     /**
     * Cria a view do formulario baseado no template setado
     **/
-    private function createFormView($controller, $model){
+    public function createFormView($controller, $model){
     
     }
     /**
     * Cria a view de deletar um item baseado no template setado
     **/
-    private function createDeleteView($controller, $model){
+    public function createDeleteView($controller, $model){
     
     }
     /**
     * Cria a view de listagem baseado no template setado
     **/
-    private function createListView($controller, $model){
+    public function createListView($controller, $model){
     
     }
     /**
@@ -154,6 +156,8 @@ class Scaffolder {
     **/
     public function generate($table){
         $controller = $this->parseField($table);
+        $fields = array();
         $this->createController($controller);
+        $this->createModel($table, $fields);
     }
 }
