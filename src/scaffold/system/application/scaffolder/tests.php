@@ -46,12 +46,16 @@ class ScaffolderTest {
         $expected = $this->getTemplate("model");
         $this->assertNotNull($result, "Conteudo model nao vazio");
         $this->assert($this->parseText($result), $this->parseText($expected), "Model correto");
-        echo $this->parseText($result);
-        echo "<br/>";
-        echo $this->parseText($expected);
+    }
+    public function testListView(){
+        $result = $this->scaffolder->createListView("cidade", array( "nome", "alias", "estado_id" ));
+        $expected = $this->getTemplate("list");
+        $this->assertNotNull($result, "Conteudo view de listagem nao vazio");
+        $this->assert($this->parseText($result), $this->parseText($expected), "View de listagem correta");
     }
 }
 
 $test = new ScaffolderTest();
 $test->testController();
 $test->testModel();
+$test->testListView();
