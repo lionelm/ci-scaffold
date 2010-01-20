@@ -14,7 +14,7 @@ foreach($vars['table_fields'] as $field)
 
 
 $model_path = APPPATH . "models\\$model.php";
-$model_template = "<\?php
+$model_template = "<?php
 class ${vars['model_name']} extends Model{
 	/*
 		Model Fields	

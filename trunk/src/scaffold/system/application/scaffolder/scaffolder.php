@@ -93,57 +93,72 @@ class Scaffolder {
             create_file($path, $template);
         }
     }
+    private function getPath($path, $filename){
+        return APPPATH . $path . "\\" . ($filename != "" ? $filename . ".php" : "");
+    }
+    private function getViewPath($model, $view){
+        $view_path = VIEW_PATH . "\\" . $this->pluralize($model);
+        if(!$this->test){
+            create_folder($this->getPath($view_path, ""));
+        }
+        return $this->getPath($view_path, $view);
+    }
+    private function pluralize($text){
+        return $text . "s";
+    }
     /**
     * Cria um controller baseado no template setado
     **/
     public function createController($controller){
-        $this->log($controller);
+        $controller_plural = $this->pluralize($controller); 
+        $this->log($controller_plural);
         $vars = array(
-            "controller" => $controller . "s",
-            "model" => "model_" . $controller,
+            "controller" => $controller_plural,
+            "controller_name" => ucwords($controller_plural),
+            "model" => "model" . $controller,
             "model_name" => ucwords($controller)
         );
         $template = $this->getTemplate("controller", $vars);
-        $this->createFile($controller_path, $template);
+        $this->createFile($this->getPath(CONTROLLER_PATH, $controller_plural), $template);
         return $template;
     }
     /**
     * Cria um model baseado no template setado
     **/
     public function createModel($model, $table_fields){
-        $this->log($model);
+        $this->log("model_" . $model);
         $vars = array(
             "table" => $model,
             "model_name" => "Model" . ucwords($model),
             "table_fields" => $table_fields,
         );
         $template = $this->getTemplate("model", $vars);
-        $this->createFile($model_path, $template);
+        $this->createFile($this->getPath(MODEL_PATH, "model" . $model), $template);
         return $template;
     }
     /**
     * Cria a view de criacao baseado no template setado
     **/
-    public function createSaveView($controller, $model){
+    public function createSaveView($model, $fields){
     
     }
     /**
     * Cria a view de edicao baseado no template setado
     **/
-    public function createEditView($controller, $model){
+    public function createEditView($model, $fields){
     
     }
     /**
     * Cria a view do formulario baseado no template setado
     **/
-    public function createFormView($controller, $model){
+    public function createFormView($model, $fields){
     
     }
     /**
     * Cria a view de deletar um item baseado no template setado
     **/
-    public function createDeleteView($controller, $model){
-    
+    public function createDeleteView($model){
+
     }
     /**
     * Cria a view de listagem baseado no template setado
@@ -156,7 +171,7 @@ class Scaffolder {
             "table_fields" => $fields,
         );
         $template = $this->getTemplate("list", $vars);
-        $this->createFile($model_path, $template);
+        $this->createFile($this->getViewPath($model, "list"), $template);
         return $template;
     }
     /**
