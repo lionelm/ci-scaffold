@@ -1,5 +1,5 @@
 <?php
-	define("APPPATH", "c:\\xampp\\htdocs\\ci-scaffold\\src\\scaffold\\system\\application\\");
+	define("APPPATH", "/home/gabriel/apps/php/ci-scaffold/src/scaffold/system/application/");
 	require("file_handler.php");
     require("config.php");
 	$table = "canal";
@@ -57,6 +57,7 @@
 class Scaffolder {
     
     var $test = false;
+    var $sep = "/";
     
     public function __construct($testing){
         $this->test = $testing;
@@ -94,10 +95,10 @@ class Scaffolder {
         }
     }
     private function getPath($path, $filename){
-        return APPPATH . $path . "\\" . ($filename != "" ? $filename . ".php" : "");
+        return APPPATH . $path . $this->sep . ($filename != "" ? $filename . ".php" : "");
     }
     private function getViewPath($model, $view){
-        $view_path = VIEW_PATH . "\\" . $this->pluralize($model);
+        $view_path = VIEW_PATH . $this->sep . $this->pluralize($model);
         if(!$this->test){
             create_folder($this->getPath($view_path, ""));
         }
@@ -105,6 +106,26 @@ class Scaffolder {
     }
     private function pluralize($text){
         return $text . "s";
+    }
+    private function canWrite($path){
+        clearstatcache();
+        return is_writable($path);
+    }
+    private function cannotWrite(){
+        $this->separator();
+        echo "Can't write at controllers, models, and/or views path. Verify permissions.<br/>";
+        $this->separator();
+    }
+    public function verifyPaths(){
+        $response = $this->canWrite($this->getPath(CONTROLLER_PATH, ""));
+        if($response)
+            $response = $this->canWrite($this->getPath(MODEL_PATH, ""));
+        if($response)
+            $response = $this->canWrite($this->getPath(VIEW_PATH, ""));
+        if(!$response && !$this->test){
+            $this->cannotWrite();
+        }
+        return $response;
     }
     /**
     * Cria um controller baseado no template setado
@@ -140,7 +161,7 @@ class Scaffolder {
     * Cria a view de criacao baseado no template setado
     **/
     public function createSaveView($model, $fields){
-    
+        
     }
     /**
     * Cria a view de edicao baseado no template setado
@@ -178,9 +199,11 @@ class Scaffolder {
     * Cria todos os arquivos necessarios para o CRUD funcionar
     **/
     public function generate($table){
-        $controller = $this->parseField($table);
-        $fields = array();
-        $this->createController($controller);
-        $this->createModel($table, $fields);
+        if($this->verifyPaths()){
+            $controller = $this->parseField($table);
+            $fields = array();
+            $this->createController($controller);
+            $this->createModel($table, $fields);
+        }
     }
 }
