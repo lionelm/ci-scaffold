@@ -7,7 +7,7 @@ class ScaffolderTest {
     var $scaffolder;
     
     public function __construct(){
-        $this->scaffolder = new Scaffolder(false);
+        $this->scaffolder = new Scaffolder(true);
     }
     /**
     * Inclui arquivo de template e retorna o conteudo da variavel $($name)_template
@@ -53,9 +53,14 @@ class ScaffolderTest {
         $this->assertNotNull($result, "Conteudo view de listagem nao vazio");
         $this->assert($this->parseText($result), $this->parseText($expected), "View de listagem correta");
     }
+    public function verifyPaths(){
+        return $this->scaffolder->verifyPaths();
+    }
 }
 
 $test = new ScaffolderTest();
-$test->testController();
-$test->testModel();
-$test->testListView();
+if($test->verifyPaths()){
+    $test->testController();
+    $test->testModel();
+    $test->testListView();
+}
