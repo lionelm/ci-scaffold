@@ -1,5 +1,5 @@
 <?php
-	define("APPPATH", "/home/gabriel/apps/php/ci-scaffold/src/scaffold/system/application/");
+	//define("APPPATH", "/home/gabriel/apps/php/ci-scaffold/src/scaffold/system/application/");
 	require("file_handler.php");
     require("config.php");
 	$table = "canal";
@@ -198,12 +198,15 @@ class Scaffolder {
     /**
     * Cria todos os arquivos necessarios para o CRUD funcionar
     **/
-    public function generate($table){
-        if($this->verifyPaths()){
-            $controller = $this->parseField($table);
-            $fields = array();
-            $this->createController($controller);
-            $this->createModel($table, $fields);
+    public function generate($table = ""){
+        echo "Show tables";
+        if($_POST){
+            if($this->verifyPaths()){
+                $controller = $this->parseField($table);
+                $fields = array();
+                $this->createController($controller);
+                $this->createModel($table, $fields);
+            }
         }
     }
 }
