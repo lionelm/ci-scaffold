@@ -1,15 +1,5 @@
 <?php
 
-$list_fields = '';
-foreach($vars['table_fields'] as $field)
-	$list_fields .= "\t\t\t\t\t<td><?= \$object->$field ?></td>\n";
-
-$head_fields = '';
-foreach($vars['table_fields'] as $field){
-	$field = ucwords($field);
-	$head_fields .= "\t\t\t\t\t<th>$field</th>\n";
-}
-	
 $list_template = "<html>
 	<head>
 		<title><?= \$title ?></title>
@@ -20,7 +10,9 @@ $list_template = "<html>
 		<table>
 			<thead>
 				<tr>
-$head_fields				
+                    <th>Nome</th>
+                    <th>Alias</th>
+                    <th>Estado_id</th>
 					<th>Edit</th>
 					<th>Delete</th>
 				</tr>
@@ -28,7 +20,10 @@ $head_fields
 			<tbody>
 				<? foreach(\$objects as \$object): ?>
 				<tr>
-$list_fields					<td>Edit</td>
+                    <td><?= \$object->nome ?></td>
+                    <td><?= \$object->alias ?></td>
+                    <td><?= \$object->estado_id ?></td>
+                    <td>Edit</td>
 					<td>Delete</td>
 				</tr>
 				<? endforeach ?>

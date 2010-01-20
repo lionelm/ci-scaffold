@@ -148,8 +148,16 @@ class Scaffolder {
     /**
     * Cria a view de listagem baseado no template setado
     **/
-    public function createListView($controller, $model){
-    
+    public function createListView($model, $fields){
+        $this->log("list");
+        $vars = array(
+            "table" => $model,
+            "model_name" => "Model" . ucwords($model),
+            "table_fields" => $fields,
+        );
+        $template = $this->getTemplate("list", $vars);
+        $this->createFile($model_path, $template);
+        return $template;
     }
     /**
     * Cria todos os arquivos necessarios para o CRUD funcionar
