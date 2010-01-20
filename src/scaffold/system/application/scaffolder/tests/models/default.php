@@ -15,7 +15,7 @@ foreach($table_fields as $field)
 
 
 $model_path = APPPATH . "models\\$model.php";
-$model_template = "<\?php
+$model_template = "<?php
 class ModelCidade extends Model{
 	/*
 		Model Fields	

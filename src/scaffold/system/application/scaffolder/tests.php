@@ -7,7 +7,7 @@ class ScaffolderTest {
     var $scaffolder;
     
     public function __construct(){
-        $this->scaffolder = new Scaffolder(true);
+        $this->scaffolder = new Scaffolder(false);
     }
     /**
     * Inclui arquivo de template e retorna o conteudo da variavel $($name)_template

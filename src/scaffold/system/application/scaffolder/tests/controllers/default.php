@@ -1,14 +1,14 @@
 <?php
 
 $controller_path = APPPATH . "controllers\\$controller.php";
-$controller_template = "<\?php
-class Cidade extends Controller{
+$controller_template = "<?php
+class Cidades extends Controller{
 	/*
 		Default Constructor
 	*/
 	function __construct(){
 		parent::Controller();
-		\$this->load->model('model_cidade', '', true);
+		\$this->load->model('modelcidade', '', true);
 	}
 
 	/*
@@ -32,7 +32,7 @@ class Cidade extends Controller{
 		Delete Cidade
 	*/
 	function delete(\$id){
-		\$response = \$this->model_cidade->delete(\$id);
+		\$response = \$this->modelcidade->delete(\$id);
 		\$this->load->view('cidades/delete', array('response' => \$response));
 	}
 	
@@ -41,7 +41,7 @@ class Cidade extends Controller{
 	*/
 	function index(){
 		\$data = array(
-			\"objects\" => \$this->model_cidade->all(),
+			\"objects\" => \$this->modelcidade->all(),
 			\"title\" => \"Cidade\",
 			\"heading\" => \"List\",
 		);

@@ -2,7 +2,7 @@
 
 $list_fields = '';
 foreach($vars['table_fields'] as $field)
-	$list_fields .= "\t\t\t\t\t<td><?= \$object->$field ?></td>\n";
+	$list_fields .= "\t\t\t\t\t<td><?php echo \$object->$field ?></td>\n";
 
 $head_fields = '';
 foreach($vars['table_fields'] as $field){
@@ -12,11 +12,11 @@ foreach($vars['table_fields'] as $field){
 	
 $list_template = "<html>
 	<head>
-		<title><?= \$title ?></title>
+		<title><?php echo \$title ?></title>
 	</head>
 	<body>
-		<h1><?= \$heading ?></h1>
-		<? if(\$objects): ?>
+		<h1><?php echo \$heading ?></h1>
+		<?php if(\$objects): ?>
 		<table>
 			<thead>
 				<tr>
@@ -26,13 +26,13 @@ $head_fields
 				</tr>
 			</thead>
 			<tbody>
-				<? foreach(\$objects as \$object): ?>
+				<?php foreach(\$objects as \$object): ?>
 				<tr>
 $list_fields					<td>Edit</td>
 					<td>Delete</td>
 				</tr>
-				<? endforeach ?>
+				<?php endforeach ?>
 			</tbody>
-		<? endif ?>
+		<?php endif ?>
 	</body>
 </html>";

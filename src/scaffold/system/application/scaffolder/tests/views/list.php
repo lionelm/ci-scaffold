@@ -2,11 +2,11 @@
 
 $list_template = "<html>
 	<head>
-		<title><?= \$title ?></title>
+		<title><?php echo \$title ?></title>
 	</head>
 	<body>
-		<h1><?= \$heading ?></h1>
-		<? if(\$objects): ?>
+		<h1><?php echo \$heading ?></h1>
+		<?php if(\$objects): ?>
 		<table>
 			<thead>
 				<tr>
@@ -18,16 +18,16 @@ $list_template = "<html>
 				</tr>
 			</thead>
 			<tbody>
-				<? foreach(\$objects as \$object): ?>
+				<?php foreach(\$objects as \$object): ?>
 				<tr>
-                    <td><?= \$object->nome ?></td>
-                    <td><?= \$object->alias ?></td>
-                    <td><?= \$object->estado_id ?></td>
+                    <td><?php echo \$object->nome ?></td>
+                    <td><?php echo \$object->alias ?></td>
+                    <td><?php echo \$object->estado_id ?></td>
                     <td>Edit</td>
 					<td>Delete</td>
 				</tr>
-				<? endforeach ?>
+				<?php endforeach ?>
 			</tbody>
-		<? endif ?>
+		<?php endif ?>
 	</body>
 </html>";
