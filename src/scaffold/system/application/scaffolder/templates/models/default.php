@@ -2,18 +2,19 @@
 
 $fields = '';
 foreach($vars['table_fields'] as $field)
-	$fields .= "\tvar \$$field;\n";
+    $field_name = $field->getName();
+	$fields .= "\tvar \$$field_name;\n";
 	
 $fill = '';
 foreach($vars['table_fields'] as $field)
-	$fill .= "\t\t\$this->$field = \$this->input->post(\"$field\");\n";
+    $field_name = $field->getName();
+	$fill .= "\t\t\$this->$field_name = \$this->input->post(\"$field_name\");\n";
 	
 $validate = '';
 foreach($vars['table_fields'] as $field)
-	$validate .= "\t\tif(\$this->$field=='') return false;\n";
+    $field_name = $field->getName();
+	$validate .= "\t\tif(\$this->$field_name=='') return false;\n";
 
-
-$model_path = APPPATH . "models\\$model.php";
 $model_template = "<?php
 class ${vars['model_name']} extends Model{
 	/*

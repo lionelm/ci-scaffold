@@ -1,6 +1,7 @@
 <?php
 
 require("driver.php");
+require("field.php");
 
 class MysqlDriver extends Driver {
 
@@ -14,24 +15,20 @@ class MysqlDriver extends Driver {
         }
         return $response;
     }
-    
-    function getFields($table){
-        $response = array();
+
+    function getFields($table){        
         $results = $this->db->query("describe $table")->result_array();
-        $number = 0;
+        return $this->_parseFields($results);
+    }
+
+    function _parseFields($results){
+        $response = array();
         foreach($results as $result){
-            $properties = 0;
-            foreach($result as $field){
-                if(!isset($response[$number])){
-                    $response[$number] = array();
-                }
-                $response[$number][$properties] = $field;
-                $properties++;
-                if($properties == 2){
-                    $number++;
-                    break;
-                }
-            }
+            $field = new Field();
+            $field->setName($result["Field"]);
+            $field->setType($result["Type"]);
+            $field->setPk($result["Key"] == 'PRI');
+            $response[] = $field;
         }
         return $response;
     }
