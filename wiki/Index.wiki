@@ -1,0 +1,37 @@
+#labels Featured,alpha,codeigniter,ci,scaffold,php
+Scaffold library for PHP Code Igniter framework.
+
+[http://gabrielverta.com/ci-scaffold/ci-scaffold-0.1a.tar.gz Alpha version released].
+
+= Introduction =
+
+CI-Scaffold generates files based on a pre-defined template, that can be changed to generate it the way you think better.
+
+= Usage =
+
+You must extract the zip file at system/application/libraries folder and use it as a Code Igniter Library.
+
+You must create a Controller that calls the Scaffold generate method like this:
+
+{{{
+<?php
+
+class Generate extends Controller {
+    public function __construct(){
+        parent::Controller();
+    }
+    public function index(){
+        $this->load->library('scaffold');
+        $this->scaffold->generate();
+    }
+}
+
+}}}
+
+This Controller will list your tables to you select one. Submiting the table will generate scaffold files for this.
+
+= Details =
+
+Features:
+  * MySQL driver for showing tables and get table fields to generate scaffold;
+  * Generating MVC for list table data;
