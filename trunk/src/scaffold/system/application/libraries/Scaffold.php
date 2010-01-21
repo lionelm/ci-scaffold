@@ -1,10 +1,9 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Scaffold extends Controller {
+class Scaffold {
 
     function Scaffolder(){
-        $this->_ci_scaffolding = TRUE;
-        parent::Controller();
+
     }
 
 
@@ -14,14 +13,9 @@ class Scaffold extends Controller {
 	 * @access	private
 	 * @return	void
 	 */	
-	function _ci_scaffolding()
-	{
-		if ($this->_ci_scaffolding === FALSE OR $this->_ci_scaff_table === FALSE)
-		{
-			show_404('Scaffolding unavailable');
-		}
-		
-		require_once(APPPATH . 'scaffolder/scaffolder'.EXT);
+	function generate()
+	{		
+		require_once(APPPATH . 'libraries/scaffolder/scaffolder'.EXT);
         $this->_show_header();
         if(array_key_exists('table', $_POST) && trim($_POST['table']) != ""){
             $table = $_POST['table'];
@@ -35,7 +29,7 @@ class Scaffold extends Controller {
 
     function _getDriver(){
         //TODO: Load driver based on user database
-        require_once(APPPATH . 'scaffolder/drivers/mysql'.EXT);
+        require_once(APPPATH . 'libraries/scaffolder/drivers/mysql'.EXT);
         return new MysqlDriver();
     }
 
@@ -63,8 +57,9 @@ class Scaffold extends Controller {
     }
 
     function _show_form($tables){
-        $this->load->helper('form');
-        echo form_open($this->uri->uri_string(), array("method" => "post"));
+        $CI =& get_instance();
+        $CI->load->helper('form');
+        echo form_open($CI->uri->uri_string(), array("method" => "post"));
         echo form_label('Table: ', 'table');
         echo form_dropdown('table', $this->_tablesAsOptions($tables), array(), 'id="table"');
         echo form_submit('', 'Submit');
@@ -72,7 +67,8 @@ class Scaffold extends Controller {
     }
 
     function _show_header(){
-        $this->load->helper('html');
+        $CI =& get_instance();
+        $CI->load->helper('html');
         echo heading('Scaffolder');
     }
 }
