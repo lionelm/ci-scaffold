@@ -22,6 +22,7 @@ class Scaffold {
             $fields = $this->_getFields($table);
 		    $scaffolder = new Scaffolder();
     		$scaffolder->generate($table, $fields);
+            $this->_showHeader();
         } else {
             $this->_showTables();
         }
@@ -70,5 +71,11 @@ class Scaffold {
         $CI =& get_instance();
         $CI->load->helper('html');
         echo heading('Scaffolder');
+    }
+
+    function _showHeader(){
+        $CI =& get_instance();
+        $CI->load->helper('url');
+        echo anchor($CI->uri->uri_string(), "Generate New Scaffold");
     }
 }
