@@ -1,5 +1,7 @@
 <?php
 
+define("APPPATH", "/home/gabriel/apps/php/ci-scaffold/src/scaffold/system/application/");
+
 require("scaffolder.php");
 
 
@@ -35,20 +37,35 @@ class ScaffolderTest {
     private function parseText($text){
         return preg_replace('/\s/', "", $text);
     }
+    private function getTableFields(){
+        require_once(APPPATH . "scaffolder/drivers/field.php");
+
+        $nome = new Field();
+        $nome->setName("nome");
+
+        $alias = new Field();
+        $alias->setName("alias");
+
+        $estado = new Field();
+        $estado->setName("estado_id");
+
+        return array( $nome, $alias, $estado );
+    }
     public function testController(){
         $result = $this->scaffolder->createController("cidade");
         $expected = $this->getTemplate("controller");
         $this->assertNotNull($result, "Conteudo controller nao vazio");
         $this->assert($this->parseText($result), $this->parseText($expected), "Controller correto");
     }
+
     public function testModel(){
-        $result = $this->scaffolder->createModel("cidade", array( "nome", "alias", "estado_id" ));
+        $result = $this->scaffolder->createModel("cidade", $this->getTableFields());
         $expected = $this->getTemplate("model");
         $this->assertNotNull($result, "Conteudo model nao vazio");
         $this->assert($this->parseText($result), $this->parseText($expected), "Model correto");
     }
     public function testListView(){
-        $result = $this->scaffolder->createListView("cidade", array( "nome", "alias", "estado_id" ));
+        $result = $this->scaffolder->createListView("cidade", $this->getTableFields());
         $expected = $this->getTemplate("list");
         $this->assertNotNull($result, "Conteudo view de listagem nao vazio");
         $this->assert($this->parseText($result), $this->parseText($expected), "View de listagem correta");

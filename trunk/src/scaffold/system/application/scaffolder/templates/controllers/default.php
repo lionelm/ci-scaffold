@@ -1,6 +1,5 @@
 <?php
 
-$controller_path = APPPATH . "controllers\\$controller.php";
 $controller_template = "<?php
 class ${vars['controller_name']} extends Controller{
 	/*

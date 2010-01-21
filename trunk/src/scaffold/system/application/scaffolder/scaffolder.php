@@ -1,65 +1,14 @@
 <?php
-	//define("APPPATH", "/home/gabriel/apps/php/ci-scaffold/src/scaffold/system/application/");
-	require("file_handler.php");
-    require("config.php");
-	$table = "canal";
-	$controller = $table . "s";
-	$model = $table;
-	$table_fields = array("nome"=>"nome");
-	
-	
-	// Parse fields
-	$controller = strtolower($controller);
-	$controller_name = ucwords($controller);
-	$model_name = ucwords($model);
-	
-	
-	
-	
-	
-	
-	// Call templates
-	/*require("templates/controllers/default.php");
-	require("templates/models/default.php");
-	require("templates/views/list.php");
-	require("templates/views/save.php");
-	require("templates/views/edit.php");
-	require("templates/views/delete.php");
-	require("templates/views/form.php");
-	echo "====================================================================================<br/>";
-	echo "Gererating $controller.php... ";
-	create_file($controller_path, $controller_template);
-	echo "DONE! <br/>";
-	echo "====================================================================================<br/>";
-	echo "Gererating $model.php... ";
-	create_file($model_path, $model_template);
-	echo "DONE! <br/>";
-	echo "====================================================================================<br/>";
-	echo "Generating views....<br/>";
-	$view_path = APPPATH . "\\views\\$controller";
-	create_folder($view_path);
-	echo "Generating save.php... ";
-	create_file($view_path . '\\save.php', $save_template);
-	echo "DONE! <br/>";
-	echo "Generating form.php... ";
-	create_file($view_path . '\\form.php',$form);
-	echo "DONE! <br/>";
-	echo "Generating edit.php... ";
-	create_file($view_path . '\\edit.php', $edit_template);
-	echo "DONE! <br/>";
-	echo "Generating delete.php... ";
-	create_file($view_path . '\\delete.php', $delete_template);
-	echo "DONE! <br/>";
-	echo "Generating list.php... ";
-	create_file($view_path . '\\list.php', $list_template);
-	echo "DONE! <br/>";*/
+
+require("file_handler.php");
+require("config.php");
 	
 class Scaffolder {
     
     var $test = false;
     var $sep = "/";
     
-    public function __construct($testing){
+    public function __construct($testing = false){
         $this->test = $testing;
     }
     /**
@@ -84,7 +33,16 @@ class Scaffolder {
         }
     }
     private function done(){
-        echo "DONE! <br/>";
+        if(!$this->test){
+            echo "DONE! <br/>";
+        }
+    }
+    private function success($table){
+        if(!$this->test){
+            $this->separator();
+            echo "Scaffold for table $table generated sucessfully! <br/>";
+            $this->separator();
+        }
     }
     /**
     * Cria um arquivo com o conteudo do template somente se não estiver sendo rodado um teste
@@ -141,6 +99,7 @@ class Scaffolder {
         );
         $template = $this->getTemplate("controller", $vars);
         $this->createFile($this->getPath(CONTROLLER_PATH, $controller_plural), $template);
+        $this->done();
         return $template;
     }
     /**
@@ -155,6 +114,7 @@ class Scaffolder {
         );
         $template = $this->getTemplate("model", $vars);
         $this->createFile($this->getPath(MODEL_PATH, "model" . $model), $template);
+        $this->done();
         return $template;
     }
     /**
@@ -193,20 +153,18 @@ class Scaffolder {
         );
         $template = $this->getTemplate("list", $vars);
         $this->createFile($this->getViewPath($model, "list"), $template);
+        $this->done();
         return $template;
     }
     /**
     * Cria todos os arquivos necessarios para o CRUD funcionar
     **/
-    public function generate($table = ""){
-        echo "Show tables";
-        if($_POST){
-            if($this->verifyPaths()){
-                $controller = $this->parseField($table);
-                $fields = array();
-                $this->createController($controller);
-                $this->createModel($table, $fields);
-            }
+    public function generate($table, $fields){
+        if($this->verifyPaths()){
+            $this->createController($table);
+            $this->createModel($table, $fields);
+            $this->createListView($table, $fields);
+            $this->success($table);
         }
     }
 }

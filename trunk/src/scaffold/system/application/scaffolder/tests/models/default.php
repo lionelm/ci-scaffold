@@ -1,18 +1,32 @@
 <?php
 
-$table_fields = array( "nome", "alias", "estado_id" );
+require_once(APPPATH . "scaffolder/drivers/field.php");
+
+$nome = new Field();
+$nome->setName("nome");
+
+$alias = new Field();
+$alias->setName("alias");
+
+$estado = new Field();
+$estado->setName("estado_id");
+
+$table_fields = array( $nome, $alias, $estado );
+
 $fields = '';
 foreach($table_fields as $field)
-	$fields .= "\tvar \$$field;\n";
+    $field_name = $field->getName();
+	$fields .= "\tvar \$$field_name;\n";
 	
 $fill = '';
 foreach($table_fields as $field)
-	$fill .= "\t\t\$this->$field = \$this->input->post(\"$field\");\n";
+    $field_name = $field->getName();
+	$fill .= "\t\t\$this->$field_name = \$this->input->post(\"$field_name\");\n";
 	
 $validate = '';
 foreach($table_fields as $field)
-	$validate .= "\t\tif(\$this->$field=='') return false;\n";
-
+    $field_name = $field->getName();
+	$validate .= "\t\tif(\$this->$field_name=='') return false;\n";
 
 $model_path = APPPATH . "models\\$model.php";
 $model_template = "<?php

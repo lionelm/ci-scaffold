@@ -2,12 +2,17 @@
 
 $list_fields = '';
 foreach($vars['table_fields'] as $field)
-	$list_fields .= "\t\t\t\t\t<td><?php echo \$object->$field ?></td>\n";
+    if(!$field->isPk()){
+        $field_name = $field->getName();
+	    $list_fields .= "\t\t\t\t\t<td><?php echo \$object->$field_name ?></td>\n";
+    }
 
 $head_fields = '';
 foreach($vars['table_fields'] as $field){
-	$field = ucwords($field);
-	$head_fields .= "\t\t\t\t\t<th>$field</th>\n";
+    if(!$field->isPk()){
+	    $field_name = ucwords($field->getName());
+    	$head_fields .= "\t\t\t\t\t<th>$field_name</th>\n";
+    }
 }
 	
 $list_template = "<html>
