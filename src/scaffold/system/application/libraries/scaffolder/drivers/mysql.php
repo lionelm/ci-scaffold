@@ -1,11 +1,11 @@
 <?php
 
-require("driver.php");
-require("field.php");
+require_once("driver.php");
+require_once("field.php");
 
 class MysqlDriver extends Driver {
 
-    function getTables(){
+    public function getTables(){
         $response = array();
         $results = $this->db->query('show tables')->result_array();
         foreach($results as $result){
@@ -16,12 +16,12 @@ class MysqlDriver extends Driver {
         return $response;
     }
 
-    function getFields($table){        
+    public function getFields($table){        
         $results = $this->db->query("describe $table")->result_array();
         return $this->_parseFields($results);
     }
 
-    function _parseFields($results){
+    private function _parseFields($results){
         $response = array();
         foreach($results as $result){
             $field = new Field();
