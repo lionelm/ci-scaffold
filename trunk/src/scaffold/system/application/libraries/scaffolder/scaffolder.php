@@ -1,17 +1,21 @@
 <?php
 
-require("file_handler.php");
 require("config.php");
+require("file_handler.php");
+require("message.php");
+require("text.php");
 	
 class Scaffolder {
     
     var $test = false;
+    var $logger;
     var $sep = "/";
     /**
     * Default constructor that set if will be runned a test
     **/    
     public function __construct($testing = false){
         $this->test = $testing;
+        $this->logger = new Message($testing);
     }
     /**
     * Include template file and return variable $($name)_template value
@@ -24,47 +28,6 @@ class Scaffolder {
         require($template_name);
         $template = $name . "_template";
         return $$template;
-    }
-    /**
-    * Text to separate other texts to user log
-    */
-    private function separator(){
-        echo "====================================================================================<br/>";
-    }
-    /**
-    * Log file that is being created if not testing
-    **/
-    private function log($text){
-        if(!$this->test){
-            $this->separator();
-            echo "Generating ${text}.php... ";
-        }
-    }
-    /**
-    * Done message to be displayed after a task
-    **/
-    private function done(){
-        if(!$this->test){
-            echo "DONE! <br/>";
-        }
-    }
-    /**
-    * Message to say that user has no permission to write at default $paths
-    **/
-    private function cannotWrite(){
-        $this->separator();
-        echo "Can't write at controllers, models, and/or views path. Verify permissions.<br/>";
-        $this->separator();
-    }
-    /**
-    * Success message to be displayed at the finish of scaffold tasks
-    */
-    private function success($table){
-        if(!$this->test){
-            $this->separator();
-            echo "Scaffold for table $table generated sucessfully! <br/>";
-            $this->separator();
-        }
     }
     /**
     * Create a file at $path which content is the template
@@ -85,18 +48,11 @@ class Scaffolder {
     * Returns the path where the view will be created
     **/
     private function getViewPath($model, $view){
-        $view_path = VIEW_PATH . $this->sep . $this->pluralize($model);
+        $view_path = VIEW_PATH . $this->sep . Text::pluralize($model);
         if(!$this->test){
             create_folder($this->getPath($view_path, ""));
         }
         return $this->getPath($view_path, $view);
-    }
-    /**
-    * Pluralize words
-    * TODO: Configurable pluralize
-    **/
-    private function pluralize($text){
-        return $text . "s";
     }
     /**
     * Verify if user who is running this application can write at $path
@@ -110,11 +66,11 @@ class Scaffolder {
     * $vars are to fill into template variables
     **/
     private function createTemplate($what, $path, $filename, $vars){
-        $this->log($filename);
+        $this->logger->log($filename);
         $template = $this->getTemplate($what, $vars);
         $pathname = ($what == 'controller' || $what == 'model') ? $this->getPath($path, $filename) : $this->getViewPath($vars['table'], $what);
         $this->createFile($pathname, $template);
-        $this->done();
+        $this->logger->done();
         return $template;
     }
     /**
@@ -129,7 +85,7 @@ class Scaffolder {
         if($response)
             $response = $this->canWrite($this->getPath(VIEW_PATH, ""));
         if(!$response && !$this->test){
-            $this->cannotWrite();
+            $this->logger->cannotWrite();
         }
         return $response;
     }
@@ -137,7 +93,7 @@ class Scaffolder {
     * Create a controller based on template set
     **/
     public function createController($controller){
-        $controller_plural = $this->pluralize($controller);
+        $controller_plural = Text::pluralize($controller);
         return $this->createTemplate("controller", CONTROLLER_PATH, $controller_plural, 
             array(
                 "controller" => $controller_plural,
@@ -203,7 +159,7 @@ class Scaffolder {
             $this->createController($table);
             $this->createModel($table, $fields);
             $this->createListView($table, $fields);
-            $this->success($table);
+            $this->logger->success($table);
         }
     }
 }
