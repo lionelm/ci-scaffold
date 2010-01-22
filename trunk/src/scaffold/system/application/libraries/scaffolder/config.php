@@ -1,12 +1,15 @@
 <?php
 
-define("TEMPLATE_CONTROLLER", "templates/controllers/default.php");
-define("TEMPLATE_MODEL", "templates/models/default.php");
-define("TEMPLATE_LIST", "templates/views/list.php");
-define("TEMPLATE_SAVE", "templates/views/save.php");
-define("TEMPLATE_EDIT", "templates/views/edit.php");
-define("TEMPLATE_DELETE", "templates/views/delete.php");
-define("TEMPLATE_FORM", "templates/views/form.php");
+$TEMPLATE_NAME = "default";
+
+define("TEMPLATE", "templates/$TEMPLATE_NAME/");
+define("TEMPLATE_CONTROLLER", TEMPLATE . "controller.php");
+define("TEMPLATE_MODEL", TEMPLATE . "model.php");
+define("TEMPLATE_LIST", TEMPLATE . "list.php");
+define("TEMPLATE_SAVE", TEMPLATE . "save.php");
+define("TEMPLATE_EDIT", TEMPLATE . "edit.php");
+define("TEMPLATE_DELETE", TEMPLATE . "delete.php");
+define("TEMPLATE_FORM", TEMPLATE . "form.php");
 
 
 define("CONTROLLER_PATH", "controllers");
