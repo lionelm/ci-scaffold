@@ -2,62 +2,73 @@
 
 class Scaffold {
 
-    function Scaffolder(){
+    /**
+    * Default constructor
+    **/
+    public function __construct(){
 
     }
-
-
     /**
-	 * Run Scaffolding
+	 * Run Scaffolder
 	 *
 	 * @access	private
 	 * @return	void
 	 */	
-	function generate()
-	{		
+	public function generate(){		
 		require_once(APPPATH . 'libraries/scaffolder/scaffolder'.EXT);
-        $this->_show_header();
+        $this->_showHeader();
         if(array_key_exists('table', $_POST) && trim($_POST['table']) != ""){
             $table = $_POST['table'];
             $fields = $this->_getFields($table);
 		    $scaffolder = new Scaffolder();
     		$scaffolder->generate($table, $fields);
-            $this->_showHeader();
+            $this->_showFooter();
         } else {
             $this->_showTables();
         }
 	}
-
-    function _getDriver(){
-        //TODO: Load driver based on user database
-        require_once(APPPATH . 'libraries/scaffolder/drivers/mysql'.EXT);
-        return new MysqlDriver();
+    /**
+    * Load database driver to query for results
+    **/
+    private function _getDriver(){
+        require_once(APPPATH . 'libraries/scaffolder/drivers/driver'.EXT);
+        return Driver::getDriver();
     }
-
-    function _getFields($table){
+    /**
+    * Return fields of a $table
+    **/
+    private function _getFields($table){
         $driver = $this->_getDriver();
         return $driver->getFields($table);
     }
-
-    function _getTables(){
+    /**
+    * Return tables of configured database
+    **/
+    private function _getTables(){
         $driver = $this->_getDriver();
         return $driver->getTables();
     }
-
-    function _showTables(){
+    /**
+    * Default view that shows form to user select
+    **/
+    private function _showTables(){
         $tables = $this->_getTables();
-        $this->_show_form($tables);
+        $this->_showForm($tables);
     }
-    
-    function _tablesAsOptions($tables){
+    /**
+    * Parse array of database $tables into dropdown options
+    **/
+    private function _tablesAsOptions($tables){
         $options = array('' => 'Select');
         foreach($tables as $table){
             $options[$table] = $table;
         }
         return $options;
     }
-
-    function _show_form($tables){
+    /**
+    * Show form to user select table
+    **/
+    private function _showForm($tables){
         $CI =& get_instance();
         $CI->load->helper('form');
         echo form_open($CI->uri->uri_string(), array("method" => "post"));
@@ -66,14 +77,18 @@ class Scaffold {
         echo form_submit('', 'Submit');
         echo form_close();
     }
-
-    function _show_header(){
+    /**
+    * HTML page header
+    */
+    private function _showHeader(){
         $CI =& get_instance();
         $CI->load->helper('html');
         echo heading('Scaffolder');
     }
-
-    function _showHeader(){
+    /**
+    * HTML page footer
+    */
+    private function _showFooter(){
         $CI =& get_instance();
         $CI->load->helper('url');
         echo anchor($CI->uri->uri_string(), "Generate New Scaffold");

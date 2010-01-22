@@ -7,14 +7,16 @@ class Scaffolder {
     
     var $test = false;
     var $sep = "/";
-    
+    /**
+    * Default constructor that set if will be runned a test
+    **/    
     public function __construct($testing = false){
         $this->test = $testing;
     }
     /**
-    * Inclui arquivo de template e retorna o conteudo da variavel $($name)_template
-    * Ex.: se $name = controller
-    * retorna o valor de $controller_template que estara dentro do arquivo contido em TEMPLATES[controller]
+    * Include template file and return variable $($name)_template value
+    * Eg.: if $name = controller
+    * returns variable $controller_template value which is in file of TEMPLATES[controller]
     */
     private function getTemplate($name, $vars = array()){
         $var_name = "TEMPLATE_" . strtoupper($name);
@@ -23,20 +25,40 @@ class Scaffolder {
         $template = $name . "_template";
         return $$template;
     }
+    /**
+    * Text to separate other texts to user log
+    */
     private function separator(){
         echo "====================================================================================<br/>";
     }
+    /**
+    * Log file that is being created if not testing
+    **/
     private function log($text){
         if(!$this->test){
             $this->separator();
             echo "Generating ${text}.php... ";
         }
     }
+    /**
+    * Done message to be displayed after a task
+    **/
     private function done(){
         if(!$this->test){
             echo "DONE! <br/>";
         }
     }
+    /**
+    * Message to say that user has no permission to write at default $paths
+    **/
+    private function cannotWrite(){
+        $this->separator();
+        echo "Can't write at controllers, models, and/or views path. Verify permissions.<br/>";
+        $this->separator();
+    }
+    /**
+    * Success message to be displayed at the finish of scaffold tasks
+    */
     private function success($table){
         if(!$this->test){
             $this->separator();
@@ -45,16 +67,23 @@ class Scaffolder {
         }
     }
     /**
-    * Cria um arquivo com o conteudo do template somente se não estiver sendo rodado um teste
+    * Create a file at $path which content is the template
+    * If it is running a test file will not be created
     **/
     private function createFile($path, $template){
         if(!$this->test){
             create_file($path, $template);
         }
     }
+    /**
+    * Joins $path and $filename adding extension if $filename is set
+    **/
     private function getPath($path, $filename){
         return APPPATH . $path . $this->sep . ($filename != "" ? $filename . ".php" : "");
     }
+    /**
+    * Returns the path where the view will be created
+    **/
     private function getViewPath($model, $view){
         $view_path = VIEW_PATH . $this->sep . $this->pluralize($model);
         if(!$this->test){
@@ -62,18 +91,37 @@ class Scaffolder {
         }
         return $this->getPath($view_path, $view);
     }
+    /**
+    * Pluralize words
+    * TODO: Configurable pluralize
+    **/
     private function pluralize($text){
         return $text . "s";
     }
+    /**
+    * Verify if user who is running this application can write at $path
+    **/
     private function canWrite($path){
         clearstatcache();
         return is_writable($path);
     }
-    private function cannotWrite(){
-        $this->separator();
-        echo "Can't write at controllers, models, and/or views path. Verify permissions.<br/>";
-        $this->separator();
+    /**
+    * Create template at file to $what you want, at $path using $filename
+    * $vars are to fill into template variables
+    **/
+    private function createTemplate($what, $path, $filename, $vars){
+        $this->log($filename);
+        $template = $this->getTemplate($what, $vars);
+        $pathname = ($what == 'controller' || $what == 'model') ? $this->getPath($path, $filename) : $this->getViewPath($vars['table'], $what);
+        $this->createFile($pathname, $template);
+        $this->done();
+        return $template;
     }
+    /**
+    * Verify if user can write at default paths:
+    *       Controller, model and view paths
+    * Displays message if user has no permissions and it is not a test
+    **/
     public function verifyPaths(){
         $response = $this->canWrite($this->getPath(CONTROLLER_PATH, ""));
         if($response)
@@ -86,51 +134,45 @@ class Scaffolder {
         return $response;
     }
     /**
-    * Cria um controller baseado no template setado
+    * Create a controller based on template set
     **/
     public function createController($controller){
-        $controller_plural = $this->pluralize($controller); 
-        $this->log($controller_plural);
-        $vars = array(
-            "controller" => $controller_plural,
-            "controller_name" => ucwords($controller_plural),
-            "model" => "model" . $controller,
-            "model_name" => ucwords($controller)
+        $controller_plural = $this->pluralize($controller);
+        return $this->createTemplate("controller", CONTROLLER_PATH, $controller_plural, 
+            array(
+                "controller" => $controller_plural,
+                "controller_name" => ucwords($controller_plural),
+                "model" => "model" . $controller,
+                "model_name" => ucwords($controller)
+            )
         );
-        $template = $this->getTemplate("controller", $vars);
-        $this->createFile($this->getPath(CONTROLLER_PATH, $controller_plural), $template);
-        $this->done();
-        return $template;
     }
     /**
-    * Cria um model baseado no template setado
+    * Create a model based on template set
     **/
     public function createModel($model, $table_fields){
-        $this->log("model_" . $model);
-        $vars = array(
-            "table" => $model,
-            "model_name" => "Model" . ucwords($model),
-            "table_fields" => $table_fields,
+        return $this->createTemplate("model", MODEL_PATH, "model" . $model, 
+            array(
+                "table" => $model,
+                "model_name" => "Model" . ucwords($model),
+                "table_fields" => $table_fields,
+            )
         );
-        $template = $this->getTemplate("model", $vars);
-        $this->createFile($this->getPath(MODEL_PATH, "model" . $model), $template);
-        $this->done();
-        return $template;
     }
     /**
-    * Cria a view de criacao baseado no template setado
+    * Create save view based on template set
     **/
     public function createSaveView($model, $fields){
         
     }
     /**
-    * Cria a view de edicao baseado no template setado
+    * Create edit view based on template set
     **/
     public function createEditView($model, $fields){
     
     }
     /**
-    * Cria a view do formulario baseado no template setado
+    * Create form view based on template set
     **/
     public function createFormView($model, $fields){
     
@@ -142,22 +184,19 @@ class Scaffolder {
 
     }
     /**
-    * Cria a view de listagem baseado no template setado
+    * Create list view based on template set
     **/
     public function createListView($model, $fields){
-        $this->log("list");
-        $vars = array(
-            "table" => $model,
-            "model_name" => "Model" . ucwords($model),
-            "table_fields" => $fields,
+        return $this->createTemplate("list", VIEW_PATH, "list", 
+            array(
+                "table" => $model,
+                "model_name" => "Model" . ucwords($model),
+                "table_fields" => $fields,
+            )
         );
-        $template = $this->getTemplate("list", $vars);
-        $this->createFile($this->getViewPath($model, "list"), $template);
-        $this->done();
-        return $template;
     }
     /**
-    * Cria todos os arquivos necessarios para o CRUD funcionar
+    * Create all CRUD features
     **/
     public function generate($table, $fields){
         if($this->verifyPaths()){
