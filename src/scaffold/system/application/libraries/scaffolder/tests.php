@@ -12,9 +12,9 @@ class ScaffolderTest {
         $this->scaffolder = new Scaffolder(true);
     }
     /**
-    * Inclui arquivo de template e retorna o conteudo da variavel $($name)_template
-    * Ex.: se $name = controller
-    * retorna o valor de $controller_template que estara dentro do arquivo contido em TEMPLATE_CONTROLLER
+    * Include template file and returns variable $($name)_template content
+    * Eg.: if $name = controller
+    * returns variable $controller_template value that is into the TEMPLATE_CONTROLLER file
     */
     private function getTemplate($name){
         $var_name = "TEMPLATE_" . strtoupper($name);
@@ -24,19 +24,40 @@ class ScaffolderTest {
         $template = $name . "_template";
         return $$template;
     }
+    /**
+    * Show user unit test results
+    **/
     private function showAssertion($name, $result){
         $result = ($result) ? "<span style=\"color:green;\">Success</span>" : "<span style=\"color:red;\">Failure</span>";
         echo "<table border=\"1\" width=\"50%\"><caption style=\"font-weight:bold;\">${name}</caption><tr><td>Result</td><td>${result}</td></tr></table>";
     }
+    /**
+    * Verifies if $test === $expected
+    **/
     private function assert($test, $expected, $name){
+        if(is_string($test)){
+            $test = $this->parseText($test);
+        }
+        if(is_string($expected)){
+            $expected = $this->parseText($expected);
+        }
         $this->showAssertion($name, $test === $expected);
     }
+    /**
+    * Verifies if $test is not null or an empty string
+    **/
     private function assertNotNull($test, $name){
         $this->showAssertion($name, $test != null && $test != "" && $test != false);
     }
+    /**
+    * Parse text to compare removing spaces 
+    **/
     private function parseText($text){
         return preg_replace('/\s/', "", $text);
     }
+    /**
+    * Generate random table fields to test
+    **/
     private function getTableFields(){
         require_once(APPPATH . "libraries/scaffolder/drivers/field.php");
 
@@ -55,54 +76,81 @@ class ScaffolderTest {
 
         return array( $id, $nome, $alias, $estado );
     }
+    /**
+    * Test if controller content is being generated correctly
+    **/
     public function testController(){
         $result = $this->scaffolder->createController("cidade");
         $expected = $this->getTemplate("controller");
-        $this->assertNotNull($result, "Conteudo controller nao vazio");
-        $this->assert($this->parseText($result), $this->parseText($expected), "Controller correto");
+        $this->assertNotNull($result, "Controller content not empty");
+        $this->assert($result, $expected, "Controller OK");
     }
-
+    /**
+    * Test if model content is being generated correctly
+    **/
     public function testModel(){
         $result = $this->scaffolder->createModel("cidade", $this->getTableFields());
         $expected = $this->getTemplate("model");
-        $this->assertNotNull($result, "Conteudo model nao vazio");
-        $this->assert($this->parseText($result), $this->parseText($expected), "Model correto");
+        $this->assertNotNull($result, "Model content not empty");
+        $this->assert($result, $expected, "Model OK");
     }
+    /**
+    * Test if list view content is being generated correctly
+    **/
     public function testListView(){
         $result = $this->scaffolder->createListView("cidade", $this->getTableFields());
         $expected = $this->getTemplate("list");
-        $this->assertNotNull($result, "Conteudo view de listagem nao vazio");
-        $this->assert($this->parseText($result), $this->parseText($expected), "View de listagem correta");
+        $this->assertNotNull($result, "List view content not empty");
+        $this->assert($result, $expected, "List view OK");
     }
+    /**
+    * Test if save view content is being generated correctly
+    **/
     public function testSaveView(){
         $result = $this->scaffolder->createSaveView("cidade");
         $expected = $this->getTemplate("save");
-        $this->assertNotNull($result, "Conteudo view de save nao vazio");
-        $this->assert($this->parseText($result), $this->parseText($expected), "View de save correta");
+        $this->assertNotNull($result, "Save view content not empty");
+        $this->assert($result, $expected, "Save view OK");
     }
+    /**
+    * Test if delete view content is being generated correctly
+    **/
     public function testDeleteView(){
         $result = $this->scaffolder->createDeleteView("cidade", $this->getTableFields());
         $expected = $this->getTemplate("delete");
-        $this->assertNotNull($result, "Conteudo view de delete nao vazio");
-        $this->assert($this->parseText($result), $this->parseText($expected), "View de delete correta");
+        $this->assertNotNull($result, "Delete view content not empty");
+        $this->assert($result, $expected, "Delete view OK");
     }
+    /**
+    * Test if form view content is being generated correctly
+    **/
     public function testFormView(){
         $result = $this->scaffolder->createFormView("cidade", $this->getTableFields());
         $expected = $this->getTemplate("form");
-        $this->assertNotNull($result, "Conteudo view de form nao vazio");
-        $this->assert($this->parseText($result), $this->parseText($expected), "View de form correta");
+        $this->assertNotNull($result, "Form view content not empty");
+        $this->assert($result, $expected, "Form view OK");
     }
+    /**
+    * Verify if controller, views and models directories are writable
+    **/
     public function verifyPaths(){
         return $this->scaffolder->verifyPaths();
+    }
+    /**
+    * Do all tests
+    **/
+    public function all(){
+        if($this->verifyPaths()){
+            $this->testController();
+            $this->testModel();
+            $this->testListView();
+            $this->testSaveView();
+            $this->testDeleteView();
+            $this->testFormView();
+        }
     }
 }
 
 $test = new ScaffolderTest();
-if($test->verifyPaths()){
-    $test->testController();
-    $test->testModel();
-    $test->testListView();
-    $test->testSaveView();
-    $test->testDeleteView();
-    $test->testFormView();
-}
+$test->all();
+
