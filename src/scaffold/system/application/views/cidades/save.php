@@ -5,6 +5,9 @@
 	</head>
 	<body>
 		<h1><?php echo $heading ?> <?php echo $title ?></h1>
+        <?php if($msg): ?>
+        <p><?php echo $msg ?></p>
+        <?php endif ?>
         <? include("form.php") ?>
         <p>
             <?php echo anchor($this->uri->segment(1), "Back") ?>
