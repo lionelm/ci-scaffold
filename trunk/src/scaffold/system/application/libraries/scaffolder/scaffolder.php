@@ -111,6 +111,7 @@ class Scaffolder {
             array(
                 "table" => $model,
                 "model_name" => "Model" . ucwords($model),
+                "model" => ucwords($model),
                 "table_fields" => $table_fields,
             )
         );

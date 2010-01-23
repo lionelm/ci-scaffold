@@ -40,6 +40,10 @@ class ScaffolderTest {
     private function getTableFields(){
         require_once(APPPATH . "libraries/scaffolder/drivers/field.php");
 
+        $id = new Field();
+        $id->setName("id");
+        $id->setPk(true);
+
         $nome = new Field();
         $nome->setName("nome");
 
@@ -49,7 +53,7 @@ class ScaffolderTest {
         $estado = new Field();
         $estado->setName("estado_id");
 
-        return array( $nome, $alias, $estado );
+        return array( $id, $nome, $alias, $estado );
     }
     public function testController(){
         $result = $this->scaffolder->createController("cidade");
