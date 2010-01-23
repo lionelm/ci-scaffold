@@ -16,9 +16,9 @@ You must create a Controller that calls the Scaffold generate method like this:
 {{{
 <?php
 
-class Generate extends Controller {
+class Admin extends Controller {
     public function __construct(){
-        parent::Controller();
+        parent::__construct();
     }
     public function index(){
         $this->load->library('scaffold');
