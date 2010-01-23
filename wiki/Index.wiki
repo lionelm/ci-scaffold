@@ -1,7 +1,7 @@
-#labels Featured,alpha,codeigniter,ci,scaffold,php
+#labels generator,alpha,codeigniter,ci,scaffold,php
 Scaffold library for PHP Code Igniter framework.
 
-[http://ci-scaffold.googlecode.com/files/ci-scaffold-0.1a.tar.gz Alpha version released].
+[http://ci-scaffold.googlecode.com/files/ci-scaffold-0.90.tar.gz Version 0.90 released].
 
 = Introduction =
 
@@ -34,4 +34,5 @@ This Controller will list your tables to you select one. Submiting the table wil
 
 Features:
   * MySQL driver for showing tables and get table fields to generate scaffold;
-  * Generating MVC for list table data;
+  * Generating MVC for list, create, update, delete table data;
+  * Files content based on templates that can be changed;
