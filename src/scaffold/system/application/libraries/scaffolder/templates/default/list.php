@@ -17,15 +17,16 @@ foreach($vars['table_fields'] as $field){
 	
 $list_template = "<html>
 	<head>
-		<title><?php echo \$title ?></title>
+        <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />
+		<title><?php echo \$heading ?> <?php echo \$title ?></title>
 	</head>
 	<body>
-		<h1><?php echo \$heading ?></h1>
+		<h1><?php echo \$heading ?> <?php echo \$title ?></h1>
 		<?php if(\$objects): ?>
 		<table>
 			<thead>
 				<tr>
-$head_fields				
+$head_fields
 					<th>Edit</th>
 					<th>Delete</th>
 				</tr>
@@ -33,11 +34,18 @@ $head_fields
 			<tbody>
 				<?php foreach(\$objects as \$object): ?>
 				<tr>
-$list_fields					<td>Edit</td>
-					<td>Delete</td>
+$list_fields
+					<td><a href=\"<?php echo site_url(\$this->uri->segment(1) . '/edit/' . \$object->id) ?>\">Edit</a></td>
+					<td><a href=\"<?php echo site_url(\$this->uri->segment(1) . '/delete/' . \$object->id) ?>\">Delete</a></td>
 				</tr>
 				<?php endforeach ?>
 			</tbody>
+        </table>
+        <?php else: ?>
+        <h3>No results found</h3>
 		<?php endif ?>
+        <p>
+            <a href=\"<?php echo site_url(\$this->uri->segment(1) . '/create/') ?>\">Create new <?php echo \$title ?></a>
+        </p>
 	</body>
 </html>";
