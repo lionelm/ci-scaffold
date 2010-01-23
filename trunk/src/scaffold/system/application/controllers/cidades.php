@@ -63,18 +63,22 @@ class Cidades extends Controller{
     * Save object
     **/
     private function save($object){
+        $msg = null;
 		if($_POST){
             $object->populate();
             if($object->validate()){
                 $object->save();
                 redirect("cidades");
                 return;
+            } else {
+                $msg = "Please fill in all required fields";
             }
 		}
         $this->load->view('cidades/save', array(
-            "title" => "Cidade",
-			"heading" => ($object->id) ? "Edit" : "New",
-            "object" => $object
+                "title" => "Cidade",
+			    "heading" => ($object->id) ? "Edit" : "New",
+                "object" => $object,
+                "msg" => $msg
             )
         );
     }
