@@ -119,26 +119,33 @@ class Scaffolder {
     /**
     * Create save view based on template set
     **/
-    public function createSaveView($model, $fields){
-        
-    }
-    /**
-    * Create edit view based on template set
-    **/
-    public function createEditView($model, $fields){
-    
+    public function createSaveView($model){
+        return $this->createTemplate("save", VIEW_PATH, "save", array(
+                "table" => $model
+            )
+        );
     }
     /**
     * Create form view based on template set
     **/
     public function createFormView($model, $fields){
-    
+        return $this->createTemplate("form", VIEW_PATH, "form", array(
+                "table" => $model,
+                "table_fields" => $fields
+            )
+        );
     }
     /**
     * Cria a view de deletar um item baseado no template setado
     **/
-    public function createDeleteView($model){
-
+    public function createDeleteView($model, $fields){
+        $first_field = $fields[1];
+        return $this->createTemplate("delete", VIEW_PATH, "delete", 
+            array(
+                "table" => $model,
+                "first_field" => $first_field,
+            )
+        );
     }
     /**
     * Create list view based on template set
@@ -160,6 +167,9 @@ class Scaffolder {
             $this->createController($table);
             $this->createModel($table, $fields);
             $this->createListView($table, $fields);
+            $this->createSaveView($table);
+            $this->createDeleteView($table, $fields);
+            $this->createFormView($table, $fields);
             $this->logger->success($table);
         }
     }

@@ -65,18 +65,22 @@ class ${vars['controller_name']} extends Controller{
     * Save object ${vars['model_name']}
     **/
     private function save(\$object){
+        \$msg = null;
 		if(\$_POST){
             \$object->populate();
             if(\$object->validate()){
                 \$object->save();
                 redirect('${vars['controller']}');
                 return;
+            } else {
+                \$msg = 'Please fill in all required fields';
             }
 		}
         \$this->load->view('${vars['controller']}/save', array(
             'title' => '${vars['model_name']}',
 			'heading' => (\$object->id) ? 'Edit' : 'New',
-            'object' => \$object
+            'object' => \$object,
+            'msg' => \$msg
             )
         );
     }

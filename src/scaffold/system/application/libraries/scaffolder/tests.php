@@ -74,6 +74,24 @@ class ScaffolderTest {
         $this->assertNotNull($result, "Conteudo view de listagem nao vazio");
         $this->assert($this->parseText($result), $this->parseText($expected), "View de listagem correta");
     }
+    public function testSaveView(){
+        $result = $this->scaffolder->createSaveView("cidade");
+        $expected = $this->getTemplate("save");
+        $this->assertNotNull($result, "Conteudo view de save nao vazio");
+        $this->assert($this->parseText($result), $this->parseText($expected), "View de save correta");
+    }
+    public function testDeleteView(){
+        $result = $this->scaffolder->createDeleteView("cidade", $this->getTableFields());
+        $expected = $this->getTemplate("delete");
+        $this->assertNotNull($result, "Conteudo view de delete nao vazio");
+        $this->assert($this->parseText($result), $this->parseText($expected), "View de delete correta");
+    }
+    public function testFormView(){
+        $result = $this->scaffolder->createFormView("cidade", $this->getTableFields());
+        $expected = $this->getTemplate("form");
+        $this->assertNotNull($result, "Conteudo view de form nao vazio");
+        $this->assert($this->parseText($result), $this->parseText($expected), "View de form correta");
+    }
     public function verifyPaths(){
         return $this->scaffolder->verifyPaths();
     }
@@ -84,4 +102,7 @@ if($test->verifyPaths()){
     $test->testController();
     $test->testModel();
     $test->testListView();
+    $test->testSaveView();
+    $test->testDeleteView();
+    $test->testFormView();
 }
