@@ -1,7 +1,7 @@
 #labels generator,alpha,codeigniter,ci,scaffold,php
 Scaffold library for PHP Code Igniter framework.
 
-[http://ci-scaffold.googlecode.com/files/ci-scaffold-0.90.tar.gz Version 0.90 released].
+[http://ci-scaffold.googlecode.com/files/ci-scaffold-0.91.tar.gz Version 0.91 released].
 
 == Introduction ==
 
@@ -41,6 +41,6 @@ At this example I selected the table "estado". All files necessary to "estado" c
 == Features ==
 
 Features:
-  * MySQL driver for showing tables and get table fields to generate scaffold;
+  * MySQL and PostgreSQL drivers for showing tables and get table fields to generate scaffold;
   * Generating MVC for list, create, update, delete table data;
   * Files content based on templates that can be changed;
