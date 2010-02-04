@@ -10,7 +10,7 @@ $save_template = "<html>
         <?php if(\$msg): ?>
         <p><?php echo \$msg ?></p>
         <?php endif ?>
-        <? include('form.php') ?>
+        <?php include('form.php') ?>
         <p>
             <?php echo anchor(\$this->uri->segment(1), 'Back') ?>
         </p>

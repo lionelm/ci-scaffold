@@ -1,6 +1,8 @@
 <?php
 
-define("APPPATH", "/home/gabriel/apps/php/ci-scaffold/src/scaffold/system/application/");
+define("EXT", ".php");
+define("BASEPATH", "/home/gabriel/apps/php/scaffold/system/");
+define("APPPATH", "/home/gabriel/apps/php/scaffold/system/application/");
 
 require("scaffolder.php");
 
@@ -77,6 +79,17 @@ class ScaffolderTest {
         return array( $id, $nome, $alias, $estado );
     }
     /**
+    * Returns table primary key
+    **/
+    private function getTablePk($fields){
+        foreach($fields as $field){
+            if($field->isPk()){
+                return $field;
+                break;
+            }
+        }
+    }
+    /**
     * Test if controller content is being generated correctly
     **/
     public function testController(){
@@ -137,6 +150,27 @@ class ScaffolderTest {
         return $this->scaffolder->verifyPaths();
     }
     /**
+    * Verify if database driver is functional
+    */
+    public function testDriver(){
+        require(BASEPATH.'codeigniter/Common'.EXT);
+        require(BASEPATH.'codeigniter/Compat'.EXT);
+        require(APPPATH.'config/constants'.EXT);
+        require(BASEPATH.'codeigniter/Base5'.EXT);
+        require_once(APPPATH . 'libraries/scaffolder/drivers/driver'.EXT);
+        $test_table = 'cidade';
+        $num_fields = 4;
+        $pk = "id";
+        $driver = Driver::getDriver();
+        $tables = $driver->getTables();
+        $this->assert(in_array($test_table, $tables), true, "Show test table");
+        $fields = $driver->getFields($test_table);
+        $this->assert(count($fields), $num_fields, "Display $num_fields fields");
+        $primary_key = $this->getTablePK($fields);
+        $this->assertNotNull($primary_key, "Has primary key");
+        $this->assert($primary_key->getName(), $pk, "Primary Key equals $pk");
+    }
+    /**
     * Do all tests
     **/
     public function all(){
@@ -147,6 +181,7 @@ class ScaffolderTest {
             $this->testSaveView();
             $this->testDeleteView();
             $this->testFormView();
+            $this->testDriver();
         }
     }
 }

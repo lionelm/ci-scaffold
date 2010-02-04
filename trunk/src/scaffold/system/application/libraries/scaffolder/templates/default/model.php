@@ -79,7 +79,7 @@ $validate
     * \$where must be an array
     **/
 	public function getBy(\$where){
-		return \$this->db->get_where('${vars['table']}', \$where);
+		return \$this->db->get_where('${vars['table']}', \$where)->result();
 	}
 }
 
